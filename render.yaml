@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: klap-clone-api
+    env: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: LLM_PROVIDER
+        value: openai
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: WHISPER_MODEL
+        value: base
+      - key: DATA_DIR
+        value: /app/data
+    disk:
+      name: klap-data
+      mountPath: /app/data
+      sizeGB: 20
+  - type: worker
+    name: klap-clone-worker
+    env: docker
+    dockerfilePath: ./Dockerfile.worker
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: WHISPER_MODEL
+        value: base
+      - key: DATA_DIR
+        value: /app/data
+    disk:
+      name: klap-data
+      mountPath: /app/data
+      sizeGB: 20
